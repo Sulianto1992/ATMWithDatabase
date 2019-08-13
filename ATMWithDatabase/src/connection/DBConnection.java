@@ -11,7 +11,7 @@ public class DBConnection //Name of the class
 	{
 		//database URL
 		// 3306 is the default port for mysql
-		String connectionURL = "jdbc:mysql://localhost:3306/clt6"; // core is database name
+		String connectionURL = "jdbc:mysql://localhost:3306/atm"; // core is database name
 		
 		// database credentials
 		String uname = "root";

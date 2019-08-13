@@ -10,7 +10,7 @@ import model.UserDetails;
 public class ATMServiceImpl implements ATMService //Name of the class
 {
 	//Variable Declaration
-	String password, secondPassword, colour;
+	String password, secondPassword, securityKey;
 	String regex = "^[\\w-_\\.+]*[\\w-_\\.]\\@([\\w]+\\.)+[\\w]+[\\w]$";
 	String charOnly = "^[a-zA-Z]*$";
 	String emailAddress, reply;
@@ -40,7 +40,6 @@ public class ATMServiceImpl implements ATMService //Name of the class
 			System.out.print("Enter email address : ");
 			emailAddress = sc.nextLine();
 		} //end while
-		
 		
 		//Determine whether the email address exists
 		while (refATMDAO.checkEmailAddress(emailAddress) != null)
@@ -78,25 +77,25 @@ public class ATMServiceImpl implements ATMService //Name of the class
 			
 		//Prompt user for his or her favourite colour
 		System.out.print("\nWhat is your favourite colour ? ");
-		colour = sc.nextLine();
+		securityKey = sc.nextLine();
 		
 		//Prompt the user for email address if the value is incorrect
-		while (!(colour.matches(charOnly)))
+		while (!(securityKey.matches(charOnly)))
 		{
 			//Prompt for user details
 			System.out.print("Invalid value. Please enter the correct value.\n");
 			System.out.print("What is your favourite colour ?");
-			colour = sc.nextLine();
+			securityKey = sc.nextLine();
 		} //end while
 			
-		System.out.println(colour + " is your security key, incase if you forgot your password.\n");
+		System.out.println(securityKey + " is your security key, incase if you forgot your password.\n");
 		
 		//Set value to setter method of User class
 		UserDetails refUser = new UserDetails();
 	
 		refUser.getRefUser().setEmailAddress(emailAddress);
 		refUser.getRefUser().setPassword(password);
-		refUser.getRefUser().setFavouriteColour(colour);
+		refUser.getRefUser().setSecurityKey(securityKey);
 		
 	    refATMDAO.addUser(refUser);
 		
@@ -328,7 +327,7 @@ public class ATMServiceImpl implements ATMService //Name of the class
 		emailAddress = sc.nextLine();
 		
 		System.out.print("\nEnter security key: ");
-		colour = sc.nextLine();
+		securityKey = sc.nextLine();
 		
 		//Prompt the user for email address if the value is incorrect
 		while (!(emailAddress.matches(regex)))
@@ -340,16 +339,16 @@ public class ATMServiceImpl implements ATMService //Name of the class
 		} //end while
 		
 		//Prompt the user for email address if the value is incorrect
-		while (!(colour.matches(charOnly)))
+		while (!(securityKey.matches(charOnly)))
 		{
 			//Prompt for user details
 			System.out.print("Invalid value. Please enter the correct value.\n");
 			System.out.print("What is your favourite colour ?");
-			colour = sc.nextLine();
+			securityKey = sc.nextLine();
 		} //end while
 		
 		//Determine whether his or her userID and security key are valid
-		if (refATMDAO.checkUserDetails(emailAddress, colour) == false)
+		if (refATMDAO.checkUserDetails(emailAddress, securityKey) == false)
 		{
 			//Display invalid message
 			System.out.println("Invalid user credentials.");
@@ -381,22 +380,22 @@ public class ATMServiceImpl implements ATMService //Name of the class
 			
 			//Prompt user for his or her favourite colour
 			System.out.print("\nWhat is your favourite colour ? ");
-			colour = sc.nextLine();
+			securityKey = sc.nextLine();
 			
 			//Prompt the user for email address if the value is incorrect
-			while (!(colour.matches(charOnly)))
+			while (!(securityKey.matches(charOnly)))
 			{
 				//Prompt for user details
 				System.out.print("Invalid value. Please enter the correct value.\n");
 				System.out.print("What is your favourite colour ?");
-				colour = sc.nextLine();
+				securityKey = sc.nextLine();
 			} //end while
 				
 			//Set the new security key
-			refATMDAO.getUser(emailAddress).getRefUser().setFavouriteColour(colour);
+			refATMDAO.getUser(emailAddress).getRefUser().setSecurityKey(securityKey);
 			
 			//Display answer for the security question
-			System.out.println(colour + " is your security key, incase if you forgot your password.\n");
+			System.out.println(securityKey + " is your security key, incase if you forgot your password.\n");
 			
 			//Set the new password
 			refATMDAO.getUser(emailAddress).getRefUser().setPassword(password);

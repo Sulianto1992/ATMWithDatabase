@@ -5,14 +5,14 @@ public class User //Name of the class
 	//Variable declaration
 	private String emailAddress;
 	private String password;
-	private String favouriteColour;
+	private String securityKey;
 	
 	//Default Constructor
 	public User()
 	{
 		emailAddress = "";
 		password = "";
-		favouriteColour = "";
+		securityKey = "";
 	}//end User method
 	
 	//Setters 
@@ -26,9 +26,9 @@ public class User //Name of the class
 		this.password = pwd;
 	}
 	
-	public void setFavouriteColour(String colour) 
+	public void setSecurityKey(String colour) 
 	{
-		this.favouriteColour = colour;
+		this.securityKey = colour;
 	}
 	
 	//Getters
@@ -42,9 +42,9 @@ public class User //Name of the class
 		return password;
 	}
 	
-	public String getFavouriteColour()
+	public String getSecurityKey()
 	{
-		return favouriteColour;
+		return securityKey;
 	}
 	
 } //end class
