@@ -5,7 +5,7 @@ import java.util.InputMismatchException;
 import java.util.Scanner;
 import dao.ATMDAO;
 import dao.ATMDAOImpl;
-import pojo.UserDetails;
+import model.UserDetails;
 
 public class ATMServiceImpl implements ATMService //Name of the class
 {

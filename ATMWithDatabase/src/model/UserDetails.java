@@ -1,7 +1,7 @@
-package pojo; //Name of the package
+package model; //Name of the package
 
-import pojo.AccountInfo;
-import pojo.User;
+import model.AccountInfo;
+import model.User;
 
 public class UserDetails //Name of the class
 {

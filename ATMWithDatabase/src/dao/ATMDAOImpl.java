@@ -2,8 +2,8 @@ package dao; //Name of the package
 
 //Import methods from classes and library
 import java.util.ArrayList;
-import pojo.User;
-import pojo.UserDetails;
+import model.User;
+import model.UserDetails;
 
 public class ATMDAOImpl implements ATMDAO //Name of the class
 {

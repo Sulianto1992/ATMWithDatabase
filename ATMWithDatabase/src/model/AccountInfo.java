@@ -1,4 +1,4 @@
-package pojo; //Name of the package
+package model; //Name of the package
 
 public class AccountInfo //Name of the class
 {
