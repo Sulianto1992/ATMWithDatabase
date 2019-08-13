@@ -48,7 +48,7 @@ public class ATMServiceImpl implements ATMService //Name of the class
 			System.out.println("Please enter another valid address\n");
 			System.out.print("Enter email address : ");
 			emailAddress = sc.nextLine();
-		} //end while
+		}//end while
 		
 		//Prompt user for his or her password
 		System.out.print("\nEnter Password: ");
@@ -64,10 +64,6 @@ public class ATMServiceImpl implements ATMService //Name of the class
 			System.out.println("Password doesn't match!!\n");
 			System.out.println("Please enter the password again");
 			
-			//Prompt user for his or her password
-			System.out.print("\nEnter Password: ");
-			password = sc.nextLine();
-			
 			//Prompt user to enter his or her password again
 			System.out.print("\nRe-type Password: ");
 			secondPassword = sc.nextLine();
@@ -75,7 +71,7 @@ public class ATMServiceImpl implements ATMService //Name of the class
 			
 		} //end while
 			
-		//Prompt user for his or her favourite colour
+		//Prompt user for his or her security key
 		System.out.print("\nWhat is your favourite colour ? ");
 		securityKey = sc.nextLine();
 		
@@ -103,7 +99,7 @@ public class ATMServiceImpl implements ATMService //Name of the class
 		System.out.println("Registration Successful!!!\n");
 	}   
 	
-	@Override
+	
 	public void loginService()
 	{
 		//Prompt user for email address
@@ -131,58 +127,46 @@ public class ATMServiceImpl implements ATMService //Name of the class
 		
 		
 		//Prompt user for his or her password if the password is incorrect
-		while (refATMDAO.isUserDataValid(emailAddress, password) != true)
+		while (refATMDAO.isUserExists(emailAddress, password) != true)
 		{
 			System.out.println("\nInvalid login credentials");
-			System.out.println("\nPlease enter the correct values");
+			System.out.println("Please enter the correct values");
 			
 			//Prompt user for email address
-			System.out.println("\nEnter User ID: ");
+			System.out.print("\nEnter User ID: ");
 			emailAddress = sc.nextLine();
 			
 			//Prompt user for password
-			System.out.println("Password: ");
+			System.out.print("Password: ");
 			password = sc.nextLine();
 		} //end while
 		
 		//Display valid message
 		System.out.println("\nLogin Successful!!\n");
 	    
+		//Display bank menu
+		System.out.println("Type 1: Check Available Bank Balance");
+		System.out.println("Type 2: Deposit Amount");
+		System.out.println("Type 3: Withdraw Amount");
 		
-		
+
 		do
 		{
-			//Display bank menu
-			displayBankMenu();
-			
-			try 
-			{
-				//Prompt user to select one of the bank options
-				System.out.print("Enter Your Choice : ");
-				choice = sc.nextInt();
-	
-				//Prompt for user input should the number is out of the range
-				while ((choice < 1) | (choice > 4))
-				{
-					//Prompt for user input
-					System.out.println("Choice not available!!");
-					System.out.print("Enter Your Choice : ");
-					sc = new Scanner(System.in);
-					choice = sc.nextInt();
-					System.out.println(); 
-				} //end while
-			} 
-			catch (InputMismatchException e) //Detect for any other input characters
+			//Prompt user to select one of the bank options
+			System.out.print("Enter Your Choice : ");
+			choice = sc.nextInt();
+		
+			//Prompt for user input should the number is out of the range
+			while ((choice < 1) | (choice > 4))
 			{
 				//Prompt for user input
 				System.out.println("Choice not available!!");
 				System.out.print("Enter Your Choice : ");
-				Scanner sc = new Scanner(System.in);
+				sc = new Scanner(System.in);
 				choice = sc.nextInt();
 				System.out.println(); 
-				
-			} //end try catch
-			
+			} //end while
+		
 			//Retrieve user that is currently logged in
 			UserDetails currentUser = refATMDAO.getUser(emailAddress);
 			
@@ -195,11 +179,13 @@ public class ATMServiceImpl implements ATMService //Name of the class
 			    		 break;
 				case 3:  withdrawAmount(currentUser);
 				         break;
-				default: System.out.println("Thanks for Banking with Us!!!\n");
-						 break;
-			} //end switch
+			} //end switch	
 			
-		}while((choice != 4));
+			//Prompt user whether he or she wants to continue to use the system
+			System.out.print("Wish to Continue?(y/n): ");
+			reply = sc.nextLine();
+			
+		}while(reply.equalsIgnoreCase("y"));
 		
 	} //end loginService method
 
@@ -220,14 +206,6 @@ public class ATMServiceImpl implements ATMService //Name of the class
 		System.out.println("4. Logout (exit)\n");
 	} //end main menu
 	
-	//Display bank options
-	public void displayBankMenu()
-	{
-		//Bank menu
-		System.out.println("Type 1: Check Available Bank Balance");
-		System.out.println("Type 2: Deposit Amount");
-		System.out.println("Type 3: Withdraw Amount");
-	} //end displayBankMenu
 
 	//Invoke method to check user's current balance
 	public void checkBalance(UserDetails currentUser)
@@ -348,7 +326,7 @@ public class ATMServiceImpl implements ATMService //Name of the class
 		} //end while
 		
 		//Determine whether his or her userID and security key are valid
-		if (refATMDAO.checkUserDetails(emailAddress, securityKey) == false)
+		if (refATMDAO.checkUserDetails(emailAddress, securityKey) != true)
 		{
 			//Display invalid message
 			System.out.println("Invalid user credentials.");

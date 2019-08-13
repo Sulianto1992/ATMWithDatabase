@@ -77,26 +77,23 @@ public class ATMDAOImpl implements ATMDAO //Name of the class
 		
 		
 	}
-	//Declare Arraylist
-	//ArrayList <UserDetails> userList = new ArrayList<UserDetails>();
 	
-	//Determine whether the email address exists in ArrayList
 	@Override
-	public boolean checkEmailAddress(String emailAddress)
+	public boolean checkEmailAddress(String refUserID)
 	{
 		getConnection();
 		
 		try
 		{
 		   stmt = conn.prepareStatement("SELECT * from customer WHERE emailAddress = ?");	
-		   stmt.setString(1, emailAddress);
+		   stmt.setString(1, refUserID);
 		   ResultSet rs = stmt.executeQuery();
 		   
 		   if (rs.next())
 			{
 				do 
 				{
-					if (rs.getString(1).compareTo(emailAddress) == 0)
+					if (rs.getString(1).compareTo(refUserID) == 0)
 				    {
 					   return true;
 				    } //end if
@@ -107,7 +104,7 @@ public class ATMDAOImpl implements ATMDAO //Name of the class
 		}
 		catch (SQLException e)
 		{
-			System.out.println("This email address " + emailAddress + " doesn't exist.");
+			System.out.println("This email address " + refUserID + " doesn't exist.");
 		}
 		finally
 		{
@@ -138,50 +135,177 @@ public class ATMDAOImpl implements ATMDAO //Name of the class
 	
 	//Determine whether the email address and password are valid for login
 	@Override
-	public boolean isUserDataValid(String refUserID, String refPassword)
+	public boolean isUserExists(String refUserID, String refPassword)
 	{
-		for (UserDetails user : userList) 
+		getConnection();
+		
+		try
 		{
-			if (user.getRefUser().getEmailAddress().equals(refUserID))
+		   stmt = conn.prepareStatement("SELECT * from customer WHERE emailAddress = ? AND password = ?");	
+		   stmt.setString(1, refUserID);
+		   stmt.setString(2, refPassword);
+		   
+		   ResultSet rs = stmt.executeQuery();
+		   
+		   if (rs.next())
 			{
-				if (user.getRefUser().getPassword().equals(refPassword))
+				do 
 				{
-					return true;
-				} //end if
-			} //end if
-		} //end for
+					if (rs.getString(1).compareTo(refUserID) == 0)
+				    {
+						if(rs.getString(2).compareTo(refPassword) == 0)
+						{
+							return true;
+						} //end if
+				    } //end if
+					
+				} while(rs.next());
+				
+			} //end if 
+		   
+		}
+		catch (SQLException e)
+		{
+			System.out.println("This email address" + refUserID + " and password " + refPassword + "do not exist.");
+		}
+		finally
+		{
+			try
+			{
+				
+				if (stmt != null)
+				{
+					stmt.close();
+				}
+				
+				
+				if (conn != null)
+				{
+					conn.close();
+				}
+			}
+			catch (SQLException e)
+			{
+				System.out.println("Caught Exception");
+			} //end catch
+	    } //end finally
+		
 		return false;
-	} //end isUserDataValid method
+		
+	} //end isUserExists method
 
 	//Retrieve the user that is logged in
 	@Override
 	public UserDetails getUser(String emailAddress)
 	{
-		//Iterate through the list
-		for (UserDetails user : userList)
-		{
-			if (user.getRefUser().getEmailAddress().equals(emailAddress))
-			{
-				return user;
-			} //end if
-		} //end for
+		getConnection();
+		UserDetails user = new UserDetails();
 		
-		return null;
-	} //end getUser method
-	
-	@Override
-	public boolean checkUserDetails(String emailAddress, String colour)
-	{
-		for (UserDetails user : userList) 
+		try
 		{
-			if (user.getRefUser().getEmailAddress().equals(emailAddress))
+			stmt = conn.prepareStatement("SELECT * FROM customer WHERE emailAddress = ?");
+			stmt.setString(1, emailAddress);
+			
+			ResultSet rs = stmt.executeQuery();
+			
+			do 
 			{
-				if (user.getRefUser().getSecurityKey().equals(colour))
+				if (rs.getString(1).compareTo(emailAddress) == 0)
 				{
-					return true;
-				} //end if 
-		    } //end if
-	    }//end for
+					user.getRefUser().setEmailAddress(rs.getString(1));
+					user.getRefUser().setPassword(rs.getString(2));
+					user.getRefUser().setSecurityKey(rs.getString(3));
+					
+			    } //end if
+				
+				
+			} while(rs.next());
+		}
+		catch (SQLException e)
+		{
+			System.out.println("Employee is not in the list.");
+		}
+		finally
+		{
+			try
+			{
+				
+				if (stmt != null)
+				{
+					stmt.close();
+				}
+				
+				
+				if (conn != null)
+				{
+					conn.close();
+				}
+			}
+			catch (SQLException e)
+			{
+				System.out.println("Caught Exception");
+			} //end catch
+	    } //end finally
+		
+		return user;
+	}
+		
+	@Override
+	public boolean checkUserDetails(String emailAddress, String securityKey)
+	{
+		getConnection();
+		
+		try
+		{
+		   stmt = conn.prepareStatement("SELECT * from customer WHERE emailAddress = ? AND securityKey = ?");	
+		   stmt.setString(1, emailAddress);
+		   stmt.setString(3, securityKey);
+		   
+		   ResultSet rs = stmt.executeQuery();
+		   
+		   if (rs.next())
+			{
+				do 
+				{
+					if (rs.getString(1).compareTo(emailAddress) == 0)
+				    {
+						if(rs.getString(3).compareTo(securityKey) == 0)
+						{
+							return true;
+						} //end if
+				    } //end if
+					
+				} while(rs.next());
+				
+			} //end if 
+		   
+		}
+		catch (SQLException e)
+		{
+			System.out.println("This email address " + emailAddress + " and security key " + securityKey + " do not exist.");
+		}
+		finally
+		{
+			try
+			{
+				
+				if (stmt != null)
+				{
+					stmt.close();
+				}
+				
+				
+				if (conn != null)
+				{
+					conn.close();
+				}
+			}
+			catch (SQLException e)
+			{
+				System.out.println("Caught Exception");
+			} //end catch
+	    } //end finally
+		
 		return false;
-	} //end ATMDAOImpl
-} //end ATMDAOImpl
+  } //end ATMDAOImpl
+}
