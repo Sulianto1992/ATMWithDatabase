@@ -7,7 +7,7 @@ import model.UserDetails;
 
 public interface ATMDAO //Name of the interface
 {
-	UserDetails checkEmailAddress(String emailAddress);
+	boolean checkEmailAddress(String emailAddress);
 	public void addUser(UserDetails refUser);
 	boolean isUserDataValid(String refUserID, String refPassword);
 	UserDetails getUser(String emailAddress);

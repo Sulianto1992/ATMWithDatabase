@@ -42,10 +42,10 @@ public class ATMServiceImpl implements ATMService //Name of the class
 		} //end while
 		
 		//Determine whether the email address exists
-		while (refATMDAO.checkEmailAddress(emailAddress) != null)
+		while (refATMDAO.checkEmailAddress(emailAddress) == true)
 		{
-			System.out.println("Email already exists!");
-			System.out.println("Please enter another valid address: ");
+			System.out.println("\nEmail already exists!");
+			System.out.println("Please enter another valid address\n");
 			System.out.print("Enter email address : ");
 			emailAddress = sc.nextLine();
 		} //end while

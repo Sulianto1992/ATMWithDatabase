@@ -3,6 +3,7 @@ package dao; //Name of the package
 //Import methods from classes and library
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import connection.DBConnection;
@@ -12,6 +13,7 @@ import model.UserDetails;
 
 public class ATMDAOImpl implements ATMDAO //Name of the class
 {
+	ArrayList <UserDetails> userList = new ArrayList<UserDetails>();
 	//Variable Connection
 	Connection conn;
 	PreparedStatement stmt;
@@ -80,16 +82,57 @@ public class ATMDAOImpl implements ATMDAO //Name of the class
 	
 	//Determine whether the email address exists in ArrayList
 	@Override
-	public UserDetails checkEmailAddress(String emailAddress)
+	public boolean checkEmailAddress(String emailAddress)
 	{
-		for (UserDetails user : userList) 
+		getConnection();
+		
+		try
 		{
-			if (user.getRefUser().getEmailAddress().equals(emailAddress))
+		   stmt = conn.prepareStatement("SELECT * from customer WHERE emailAddress = ?");	
+		   stmt.setString(1, emailAddress);
+		   ResultSet rs = stmt.executeQuery();
+		   
+		   if (rs.next())
 			{
-				return user;
+				do 
+				{
+					if (rs.getString(1).compareTo(emailAddress) == 0)
+				    {
+					   return true;
+				    } //end if
+				} while(rs.next());
+				
 			} //end if 
-		} //end for
-		return null;
+		   
+		}
+		catch (SQLException e)
+		{
+			System.out.println("This email address " + emailAddress + " doesn't exist.");
+		}
+		finally
+		{
+			try
+			{
+				
+				if (stmt != null)
+				{
+					stmt.close();
+				}
+				
+				
+				if (conn != null)
+				{
+					conn.close();
+				}
+			}
+			catch (SQLException e)
+			{
+				System.out.println("Caught Exception");
+			} //end catch
+	    } //end finally
+		
+		return false;
+		
 	} //end checkEmailAddress method
 	
 	
