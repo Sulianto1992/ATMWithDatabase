@@ -11,6 +11,7 @@ public interface ATMDAO //Name of the interface
 	public void addUser(UserDetails refUser);
 	boolean isUserExists(String refUserID, String refPassword);
 	UserDetails getUser(String emailAddress);
-	boolean checkUserDetails(String emailAddress, String securityKey);
+	boolean checkUserDetails(String refEmail, String refSecurityKey);
+	public void updateUserDetails(UserDetails refUser);
 	
 } //end ATMDAO

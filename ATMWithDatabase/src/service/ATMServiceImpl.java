@@ -11,8 +11,8 @@ public class ATMServiceImpl implements ATMService //Name of the class
 {
 	//Variable Declaration
 	String password, secondPassword, securityKey;
-	String regex = "^[\\w-_\\.+]*[\\w-_\\.]\\@([\\w]+\\.)+[\\w]+[\\w]$";
-	String charOnly = "^[a-zA-Z]*$";
+	String regex = "^[\\w-_\\.+]*[\\w-_\\.]\\@([\\w]+\\.)+[\\w]+[\\w]$"; //Check for valid email address
+	String charOnly = "^[a-zA-Z]*$"; //Check whether the user input contains alphabets only
 	String emailAddress, reply;
 	Scanner sc = new Scanner(System.in);
 	ATMDAO refATMDAO;		
@@ -174,6 +174,9 @@ public class ATMServiceImpl implements ATMService //Name of the class
 			switch(choice)
 			{
 				case 1:  checkBalance(currentUser);
+						 //Prompt user whether he or she wants to continue to use the system
+						 System.out.print("Wish to Continue?(y/n): ");
+						 reply = sc.nextLine();
 					     break;
 				case 2:  depositAmount(currentUser);
 			    		 break;
@@ -181,10 +184,7 @@ public class ATMServiceImpl implements ATMService //Name of the class
 				         break;
 			} //end switch	
 			
-			//Prompt user whether he or she wants to continue to use the system
-			System.out.print("Wish to Continue?(y/n): ");
-			reply = sc.nextLine();
-			
+
 		}while(reply.equalsIgnoreCase("y"));
 		
 	} //end loginService method
@@ -300,12 +300,9 @@ public class ATMServiceImpl implements ATMService //Name of the class
 	//Invoke method to reset the user's password
 	public void forgetPassword() 
 	{
-		//Prompt user for user ID and security key
+		//Prompt user for user ID
 		System.out.print("Enter Your ID : ");
 		emailAddress = sc.nextLine();
-		
-		System.out.print("\nEnter security key: ");
-		securityKey = sc.nextLine();
 		
 		//Prompt the user for email address if the value is incorrect
 		while (!(emailAddress.matches(regex)))
@@ -315,6 +312,10 @@ public class ATMServiceImpl implements ATMService //Name of the class
 			System.out.print("Enter email address : ");
 			emailAddress = sc.nextLine();
 		} //end while
+		
+		//Prompt user for security key
+		System.out.print("\nEnter security key: ");
+		securityKey = sc.nextLine();
 		
 		//Prompt the user for email address if the value is incorrect
 		while (!(securityKey.matches(charOnly)))
@@ -356,7 +357,7 @@ public class ATMServiceImpl implements ATMService //Name of the class
 				
 			} //end while
 			
-			//Prompt user for his or her favourite colour
+			//Prompt user for his or her security key
 			System.out.print("\nWhat is your favourite colour ? ");
 			securityKey = sc.nextLine();
 			
@@ -369,17 +370,22 @@ public class ATMServiceImpl implements ATMService //Name of the class
 				securityKey = sc.nextLine();
 			} //end while
 				
-			//Set the new security key
-			refATMDAO.getUser(emailAddress).getRefUser().setSecurityKey(securityKey);
+			
+			//Set value to setter method of User class
+			UserDetails refUser = new UserDetails();
+		
+			refUser.getRefUser().setEmailAddress(emailAddress);
+			refUser.getRefUser().setPassword(password);
+			refUser.getRefUser().setSecurityKey(securityKey);
+			
+		    refATMDAO.updateUserDetails(refUser);
 			
 			//Display answer for the security question
 			System.out.println(securityKey + " is your security key, incase if you forgot your password.\n");
 			
-			//Set the new password
-			refATMDAO.getUser(emailAddress).getRefUser().setPassword(password);
-			
 			//Display valid message
 			System.out.println("Your password has been reset successfully.\n");
+			
 			
 		} //end if
 

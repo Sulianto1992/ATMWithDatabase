@@ -251,15 +251,15 @@ public class ATMDAOImpl implements ATMDAO //Name of the class
 	}
 		
 	@Override
-	public boolean checkUserDetails(String emailAddress, String securityKey)
+	public boolean checkUserDetails(String refEmail, String refSecurityKey)
 	{
 		getConnection();
 		
 		try
 		{
 		   stmt = conn.prepareStatement("SELECT * from customer WHERE emailAddress = ? AND securityKey = ?");	
-		   stmt.setString(1, emailAddress);
-		   stmt.setString(3, securityKey);
+		   stmt.setString(1, refEmail);
+		   stmt.setString(2, refSecurityKey);
 		   
 		   ResultSet rs = stmt.executeQuery();
 		   
@@ -267,9 +267,9 @@ public class ATMDAOImpl implements ATMDAO //Name of the class
 			{
 				do 
 				{
-					if (rs.getString(1).compareTo(emailAddress) == 0)
+					if (rs.getString(1).compareTo(refEmail) == 0)
 				    {
-						if(rs.getString(3).compareTo(securityKey) == 0)
+						if(rs.getString(3).compareTo(refSecurityKey) == 0)
 						{
 							return true;
 						} //end if
@@ -282,7 +282,7 @@ public class ATMDAOImpl implements ATMDAO //Name of the class
 		}
 		catch (SQLException e)
 		{
-			System.out.println("This email address " + emailAddress + " and security key " + securityKey + " do not exist.");
+			System.out.println("This email address " + refEmail + " and security key " + refSecurityKey + " do not exist.");
 		}
 		finally
 		{
@@ -308,4 +308,48 @@ public class ATMDAOImpl implements ATMDAO //Name of the class
 		
 		return false;
   } //end ATMDAOImpl
+	
+	@Override
+	public void updateUserDetails(UserDetails refUser)
+	{
+		try
+		{
+			getConnection();
+			
+			String sql = "UPDATE customer SET password = ?, securityKey = ? WHERE emailAddress = ?";
+			stmt = conn.prepareStatement(sql);
+			
+			stmt.setString(3, refUser.getRefUser().getEmailAddress());
+		    stmt.setString(1, refUser.getRefUser().getPassword());
+		    stmt.setString(2, refUser.getRefUser().getSecurityKey());
+		    
+		    stmt.executeUpdate();
+		}
+		catch (SQLException e)
+		{
+			System.out.println("Cannot update record.");
+		}
+		finally
+		{
+			try
+			{
+				
+				if (stmt != null)
+				{
+					stmt.close();
+				}
+				
+				
+				if (conn != null)
+				{
+					conn.close();
+				}
+			}
+			catch (SQLException e)
+			{
+				System.out.println("Caught exception");
+			} //end try catch
+		} //end finally
+	} //end updateUserDetails
+	
 }
