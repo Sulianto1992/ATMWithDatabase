@@ -330,7 +330,8 @@ public class ATMServiceImpl implements ATMService //Name of the class
 		if (refATMDAO.checkUserDetails(emailAddress, securityKey) != true)
 		{
 			//Display invalid message
-			System.out.println("Invalid user credentials.");
+			System.out.println("\nInvalid user credentials.");
+			System.out.println("Please try again later when you have valid credentials.\n");
 		} 
 		else
 		{
